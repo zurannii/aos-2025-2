@@ -8,7 +8,7 @@ console.log("PYTHON_ROOT", process.env.PYTHON_ROOT);
 const app = express();
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Bem-vindo ao Express de Márcio");
 });
 
 app.listen(3000, () => {
