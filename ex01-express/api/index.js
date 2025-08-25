@@ -7,19 +7,33 @@ console.log("MY_SECRET", process.env.MY_SECRET);
 console.log("PYTHON_ROOT", process.env.PYTHON_ROOT);
 
 const app = express();
+app.set("trust proxy", true);
 
-app.use(cors());
+var corsOptions = {
+  origin: ["http://example.com", "*"],
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
+
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path} - ${req.ip}`);
   next();
 });
 
 app.get("/", (req, res) => {
-  res.send("Bem-vindo ao Express de Márcio");
+  return res.send("Received a GET HTTP method");
 });
 
-app.get("/example", (req, res) => {
-  res.send("Bem vindo ao Express: URL example");
+app.post("/", (req, res) => {
+  return res.send("Received a POST HTTP method");
+});
+
+app.put("/", (req, res) => {
+  return res.send("Received a PUT HTTP method");
+});
+
+app.delete("/", (req, res) => {
+  return res.send("Received a DELETE HTTP method");
 });
 
 app.listen(3000, () => {
