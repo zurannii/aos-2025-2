@@ -1,9 +1,7 @@
-// ex01-express/api/routes/message.js
 import { Router } from "express";
 
 const router = Router();
 
-// READ - Obter todas as mensagens
 router.get("/", async (req, res) => {
   try {
     const messages = await req.context.models.Message.findAll();
@@ -14,7 +12,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// READ - Obter uma mensagem pelo ID
 router.get("/:messageId", async (req, res) => {
   try {
     const message = await req.context.models.Message.findByPk(
@@ -30,22 +27,19 @@ router.get("/:messageId", async (req, res) => {
   }
 });
 
-// CREATE - Criar uma nova mensagem
 router.post("/", async (req, res) => {
   try {
     const { text, userId } = req.body;
-    // Validação básica
     if (!text || !userId) {
       return res.status(400).json({ error: "O texto e o userId são obrigatórios." });
     }
-    // Verifica se o usuário existe antes de criar a mensagem
     const user = await req.context.models.User.findByPk(userId);
     if (!user) {
         return res.status(404).json({ error: "Usuário autor não encontrado." });
     }
     const message = await req.context.models.Message.create({
       text,
-      userId, // Associa a mensagem ao usuário
+      userId, 
     });
     return res.status(201).json(message);
   } catch (error) {
@@ -54,7 +48,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// UPDATE - Atualizar uma mensagem
 router.put("/:messageId", async (req, res) => {
     try {
       const message = await req.context.models.Message.findByPk(req.params.messageId);
@@ -72,7 +65,6 @@ router.put("/:messageId", async (req, res) => {
     }
   });
 
-// DELETE - Deletar uma mensagem
 router.delete("/:messageId", async (req, res) => {
   try {
     const result = await req.context.models.Message.destroy({

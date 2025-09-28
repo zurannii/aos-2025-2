@@ -19,7 +19,7 @@ const sequelize = new Sequelize(process.env.POSTGRES_URL, {
       rejectUnauthorized: false,
     },
   },
-  logging: true, // Deixe como 'true' por enquanto para vermos os logs do SQL
+  logging: true, 
 });
 
 const models = {
@@ -27,8 +27,6 @@ const models = {
   Message: getMessageModel(sequelize, Sequelize),
 };
 
-// ESSA É A PARTE IMPORTANTE:
-// Executa o método .associate de cada modelo para criar as relações
 Object.keys(models).forEach((key) => {
   if ('associate' in models[key]) {
     models[key].associate(models);
