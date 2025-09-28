@@ -1,21 +1,25 @@
-import Sequelize from "sequelize";
+// ex01-express/api/models/index.js
 
-import getUserModel from "./user";
-import getMessageModel from "./message";
+import 'dotenv/config';
+import Sequelize from 'sequelize';
 
-//POSTGRES_URL
+import getUserModel from './user.js';
+import getMessageModel from './message.js';
+
+if (!process.env.POSTGRES_URL) {
+  throw new Error('A variável de ambiente POSTGRES_URL não está definida. Verifique seu arquivo .env');
+}
+
 const sequelize = new Sequelize(process.env.POSTGRES_URL, {
-  dialect: "postgres",
-  protocol: "postgres",
-  // logging: false, // Disable SQL query logging
+  dialect: 'postgres',
+  protocol: 'postgres',
   dialectOptions: {
-    // Necessary for SSL on NeonDB, Render.com and other providers
     ssl: {
       require: true,
       rejectUnauthorized: false,
     },
   },
-  dialectModule: require("pg"),
+  logging: true, // Deixe como 'true' por enquanto para vermos os logs do SQL
 });
 
 const models = {
@@ -23,12 +27,13 @@ const models = {
   Message: getMessageModel(sequelize, Sequelize),
 };
 
+// ESSA É A PARTE IMPORTANTE:
+// Executa o método .associate de cada modelo para criar as relações
 Object.keys(models).forEach((key) => {
-  if ("associate" in models[key]) {
+  if ('associate' in models[key]) {
     models[key].associate(models);
   }
 });
 
 export { sequelize };
-
 export default models;
